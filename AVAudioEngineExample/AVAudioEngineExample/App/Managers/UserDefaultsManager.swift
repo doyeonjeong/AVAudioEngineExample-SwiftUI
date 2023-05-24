@@ -23,23 +23,16 @@ final class UserDefaultsManager {
 // MARK: - Data Get, Set Properties
 extension UserDefaultsManager {
     
-    var customSoundsDic: [Int: UUID] {
+    var customSoundsDic: [Int: String] {
         get {
             guard let customSoundsDictionary = standard.dictionary(forKey: CUSTOM_SOUND_KEY) as? [Int: String] else {
                 return [:]
             }
-            let customSounds = customSoundsDictionary.compactMapValues { idString in
-                UUID(uuidString: idString)
-            }
-            return customSounds
+            return customSoundsDictionary
         }
         
         set {
-            let customSoundsDictionary = newValue.reduce(into: [Int: String]()) { dic, keyValue in
-                let (index, id) = keyValue
-                dic[index] = id.uuidString
-            }
-            standard.set(customSoundsDictionary, forKey: CUSTOM_SOUND_KEY)
+            standard.set(newValue, forKey: CUSTOM_SOUND_KEY)
         }
     }
     
