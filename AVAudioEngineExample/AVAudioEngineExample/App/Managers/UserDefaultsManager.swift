@@ -42,4 +42,11 @@ extension UserDefaultsManager {
             standard.set(customSoundsDictionary, forKey: CUSTOM_SOUND_KEY)
         }
     }
+    
+    func removeOneCustomSounds(at index: Int) {
+        var customSoundsDictionary = customSoundsDic
+        customSoundsDictionary.removeValue(forKey: index)
+        customSoundsDic = customSoundsDictionary
+    }
+    
 }
