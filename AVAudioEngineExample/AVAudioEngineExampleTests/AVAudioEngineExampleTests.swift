@@ -9,13 +9,19 @@ import XCTest
 @testable import AVAudioEngineExample
 
 final class AVAudioEngineExampleTests: XCTestCase {
+    
+    var sut: UserDefaultsManager!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        // Create an instance of UserDefaultsManager before each test
+        sut = UserDefaultsManager.shared
+        // Ensure to start with empty customSoundsDic before each test
+        sut.removeAllCustomSounds()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        sut.removeAllCustomSounds()
+        sut = nil
     }
 
     func testExample() throws {
@@ -31,6 +37,52 @@ final class AVAudioEngineExampleTests: XCTestCase {
         self.measure {
             // Put the code you want to measure the time of here.
         }
+    }
+    
+    func testCustomSoundsDicSaveAndLoad() throws {
+        // Given
+        let soundUUID = UUID()
+        let soundIndex = 1
+        
+        // When
+        sut.customSoundsDic[soundIndex] = soundUUID
+        
+        // Then
+        let loadedSoundUUID = sut.customSoundsDic[soundIndex]
+        XCTAssertEqual(loadedSoundUUID, soundUUID, "Saved and loaded sound UUIDs should match.")
+    }
+    
+    func testRemoveOneCustomSound() throws {
+        // Given
+        let soundUUID1 = UUID()
+        let soundUUID2 = UUID()
+        let soundIndex1 = 1
+        let soundIndex2 = 2
+        sut.customSoundsDic[soundIndex1] = soundUUID1
+        sut.customSoundsDic[soundIndex2] = soundUUID2
+        
+        // When
+        sut.removeOneCustomSounds(at: soundIndex1)
+        
+        // Then
+        XCTAssertNil(sut.customSoundsDic[soundIndex1], "Sound at index 1 should be removed.")
+        XCTAssertEqual(sut.customSoundsDic[soundIndex2], soundUUID2, "Sound at index 2 should still exist.")
+    }
+    
+    func testRemoveAllCustomSounds() throws {
+        // Given
+        let soundUUID1 = UUID()
+        let soundUUID2 = UUID()
+        let soundIndex1 = 1
+        let soundIndex2 = 2
+        sut.customSoundsDic[soundIndex1] = soundUUID1
+        sut.customSoundsDic[soundIndex2] = soundUUID2
+        
+        // When
+        sut.removeAllCustomSounds()
+        
+        // Then
+        XCTAssertTrue(sut.customSoundsDic.isEmpty, "All sounds should be removed.")
     }
 
 }

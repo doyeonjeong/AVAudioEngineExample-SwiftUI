@@ -49,4 +49,8 @@ extension UserDefaultsManager {
         customSoundsDic = customSoundsDictionary
     }
     
+    func removeAllCustomSounds() {
+        standard.removeObject(forKey: CUSTOM_SOUND_KEY)
+    }
+    
 }
